@@ -97,6 +97,7 @@ class MONetModel(BaseModel):
             x_k_masked = m_k * x_mu_k
 
             # Exponents for the decoder loss
+            x_logvar_k = x_logvar_k.to(self.device) 
             b_k = log_m_k - 0.5 * x_logvar_k - (self.x - x_mu_k).pow(2) / (2 * x_logvar_k.exp())
             b.append(b_k.unsqueeze(1))
 

@@ -673,7 +673,7 @@ class ComponentVAE(nn.Module):
         # Coordinate axes:
         x = torch.linspace(-1, 1, w, device=z.device)
         y = torch.linspace(-1, 1, h, device=z.device)
-        y_b, x_b = torch.meshgrid(y, x)
+        y_b, x_b = torch.meshgrid([y, x])
         # Expand from (h, w) -> (n, 1, h, w)
         x_b = x_b.expand(n, 1, -1, -1)
         y_b = y_b.expand(n, 1, -1, -1)
