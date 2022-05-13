@@ -6,8 +6,10 @@ from data.base_dataset import BaseDataset
 from data.image_folder import make_dataset
 from PIL import Image
 
+from torchvision.io import read_video
 
-class CLEVRDataset(BaseDataset):
+
+class CaterDataset(BaseDataset):
     """This dataset class can load a set of images specified by the path --dataroot /path/to/data.
 
     It can be used for generating CycleGAN results only for one side with the model option '-model test'.
@@ -16,7 +18,7 @@ class CLEVRDataset(BaseDataset):
     @staticmethod
     def modify_commandline_options(parser, is_train):
         parser.set_defaults(input_nc=3, output_nc=3,
-                            crop_size=192, # crop is done first
+                            crop_size=240, # crop is done first
                             load_size=64,  # before resize
                             num_slots=11, display_ncols=11)
         return parser
@@ -28,11 +30,11 @@ class CLEVRDataset(BaseDataset):
             opt (Option class) -- stores all the experiment flags; needs to be a subclass of BaseOptions
         """
         BaseDataset.__init__(self, opt)
-        p = os.path.join(opt.dataroot, 'videos')
+        p = os.path.join(opt.dataroot, 'train' if opt.isTrain else 'test')
         self.A_paths = sorted(make_dataset(p, opt.max_dataset_size))
 
     def _transform(self, img):
-        img = TF.resized_crop(img, 64, 29, self.opt.crop_size, self.opt.crop_size, self.opt.load_size)
+        img = TF.resized_crop(img, 0, 40, self.opt.crop_size, self.opt.crop_size, self.opt.load_size)
         img = TF.to_tensor(img)
         img = TF.normalize(img, [0.5] * self.opt.input_nc, [0.5] * self.opt.input_nc)
         return img
