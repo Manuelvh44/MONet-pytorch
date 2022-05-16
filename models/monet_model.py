@@ -77,6 +77,8 @@ class MONetModel(BaseModel):
         shape[1] = 1
         log_s_k = self.x.new_zeros(shape)
 
+        self.z_mu = torch.empty((self.x.shape[0], self.opt.z_dim, self.opt.num_slots))
+
         for k in range(self.opt.num_slots):
             # Derive mask from current scope
             if k != self.opt.num_slots - 1:
@@ -89,6 +91,7 @@ class MONetModel(BaseModel):
 
             # Get component and mask reconstruction, as well as the z_k parameters
             m_tilde_k_logits, x_mu_k, x_logvar_k, z_mu_k, z_logvar_k = self.netCVAE(self.x, log_m_k, k == 0)
+            self.z_mu[:, :, k] = z_mu_k
 
             # KLD is additive for independent distributions
             self.loss_E += -0.5 * (1 + z_logvar_k - z_mu_k.pow(2) - z_logvar_k.exp()).sum()
@@ -131,3 +134,7 @@ class MONetModel(BaseModel):
         self.optimizer.zero_grad()   # clear network G's existing gradients
         self.backward()              # calculate gradients for network G
         self.optimizer.step()        # update gradients for network G
+    
+    def get_current_latent_means(self):
+        """Return the current z_mu (latent means)"""
+        return self.z_mu
