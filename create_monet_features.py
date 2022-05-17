@@ -39,10 +39,10 @@ import pickle as pkl
 def save_z_means_as_pkl(z_mu, img_path):
     file_name = os.path.basename(img_path)
     video_number = file_name[10:16]
-    directory_path = os.path.join("/projects/hochmeister/CATER-videos/features/images_small/", video_number)
+    directory_path = os.path.join("/projects/hochmeister/CATER-videos/features/per_frame/", video_number)
     if not os.path.isdir(directory_path):
         os.mkdir(directory_path)
-    save_path = os.path.join("/projects/hochmeister/CATER-videos/features/images_small/", video_number, f"{file_name[:-4]}.pkl")
+    save_path = os.path.join(directory_path, f"{file_name[:-4]}.pkl")
     with open(save_path, 'wb') as f:
         pkl.dump(z_mu, f)
 
@@ -50,8 +50,8 @@ def save_z_means_as_pkl(z_mu, img_path):
 if __name__ == '__main__':
     opt = TestOptions().parse()  # get test options
     # hard-code some parameters for test
-    opt.num_threads = 0   # test code only supports num_threads = 1
-    opt.batch_size = 64    # test code only supports batch_size = 1
+    opt.num_threads = 40   # test code only supports num_threads = 1
+    opt.batch_size = 512   # test code only supports batch_size = 1
     opt.serial_batches = True  # disable data shuffling; comment this line if results on randomly chosen images are needed.
     opt.no_flip = True    # no flip; comment this line if results on flipped images are needed.
     opt.display_id = -1   # no visdom display; the test code saves the results to a HTML file.
@@ -87,7 +87,7 @@ if __name__ == '__main__':
             save_z_means_as_pkl(z_mu, path)
 
 
-        if i % 5 == 0:  # save images to an HTML file
-            print('processing (%04d)-th image... %s' % (i, img_path))
-        save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
-    webpage.save()  # save the HTML
+        if i % 10 == 0:  # save images to an HTML file
+            print(f'processing {opt.batch_size * i}-th image...')
+        #save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
+    #webpage.save()  # save the HTML

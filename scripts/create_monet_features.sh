@@ -1,0 +1,2 @@
+set -ex
+python /projects/hochmeister/MONet-pytorch/create_monet_features.py --dataset_mode "cater" --dataroot "/projects/hochmeister/CATER-videos/all_frames" --name "cater_monet" --model "monet" --phase "test"
