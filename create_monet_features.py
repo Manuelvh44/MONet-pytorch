@@ -32,14 +32,13 @@ from data import create_dataset
 from models import create_model
 from util.visualizer import save_images
 from util import html
-
 import pickle as pkl
 
 
 def save_z_means_as_pkl(z_mu, img_path):
     file_name = os.path.basename(img_path)
     video_number = file_name[10:16]
-    directory_path = os.path.join("/projects/hochmeister/CATER-videos/features/per_frame/", video_number)
+    directory_path = os.path.join("/projects/hochmeister/CATER-videos/trash", video_number)
     if not os.path.isdir(directory_path):
         os.mkdir(directory_path)
     save_path = os.path.join(directory_path, f"{file_name[:-4]}.pkl")
@@ -69,7 +68,7 @@ if __name__ == '__main__':
         model.eval()
     for i, data in enumerate(dataset):
         if i >= opt.num_test:  # only apply our model to opt.num_test images.
-            break
+           break
         model.set_input(data)  # unpack data from data loader
         model.test()           # run inference
         visuals = model.get_current_visuals()  # get image results

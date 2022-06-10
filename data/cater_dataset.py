@@ -30,7 +30,8 @@ class CaterDataset(BaseDataset):
             opt (Option class) -- stores all the experiment flags; needs to be a subclass of BaseOptions
         """
         BaseDataset.__init__(self, opt)
-        p = os.path.join(opt.dataroot, 'train' if opt.isTrain else 'test')
+        p = opt.dataroot
+        #p = os.path.join(opt.dataroot, 'train' if opt.isTrain else 'test')
         self.A_paths = sorted(make_dataset(p, opt.max_dataset_size))
 
     def _transform(self, img):
